@@ -2,8 +2,6 @@ import ipdb
 import vrdf
 import sys
 
-base_uri = "http://example.org/"
-
 def get_class_details(g, c_uri):
     rq = """
     select ?c_uri ?c_member_name ?c_member_type ?is_class { 
@@ -16,7 +14,7 @@ def get_class_details(g, c_uri):
     optional { ?c_member sh:node ?c_member_type. bind(false as ?is_class) }
     }
     """
-    res = vrdf.rq_df(g, rq, init_bindings = {"c_uri": c_uri}, base_uri = base_uri)
+    res = vrdf.rq_df(g, rq, init_bindings = {"c_uri": c_uri})
     return res
 
 def uri_to_dot_id(uri):
@@ -26,7 +24,8 @@ def dump_shacl_diagram(g, shacl_classes_d):
     out_fd = sys.stdout
     print(f"digraph {{", file = out_fd)
     print(f"  node [shape=plaintext];", file = out_fd)
-    
+
+    # nodes
     for c_uri, c_dets in shacl_classes_d.items():
         print(f"  {uri_to_dot_id(c_uri)} [", file = out_fd)
         print(f"     label=<", file = out_fd)
@@ -49,7 +48,7 @@ def dump_shacl_diagram(g, shacl_classes_d):
     for c_uri, c_dets in shacl_classes_d.items():
         for r in c_dets.iterrows():
             member_name = r[1][1].n3(g.namespace_manager)
-            member_type = r[1][2]
+            member_type = r[1][2] # MUST BE as-is (i.e. no n3 or other normalizaitions) since is used to make node id using uri
             is_class = r[1][3].toPython()
             if is_class:
                 print(f'    {uri_to_dot_id(c_uri)} -> {uri_to_dot_id(member_type)} [label = "{member_name}", fontsize=8, fontcolor=blue, fontname="Arial"]', file = out_fd)
