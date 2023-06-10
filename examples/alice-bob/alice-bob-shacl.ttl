@@ -20,10 +20,9 @@ foaf:Person rdf:type rdfs:Class; rdf:type sh:NodeShape;
 	    123 another line
 	    """;
 	    sh:property [sh:path foaf:name; sh:datatype xsd:string; sh:minCount 1; sh:maxCount 1];
-	    sh:property [sh:path foaf:knows; sh:class foaf:Person];
 	    sh:property [sh:path :watched; sh:class wd:Movie ]; # sh:or ( [sh:class wd:Movie ] [sh:nodeKind sh:IRI ] ) ];
+	    sh:property [sh:path foaf:knows; sh:class foaf:Person];
 	    sh:property [sh:path foaf:age; sh:datatype xsd:integer ].
 
 wd:Movie rdf:type rdfs:Class; rdf:type sh:NodeShape;
 	 sh:property [sh:path wd:title; sh:datatype xsd:string; sh:minCount 1; sh:maxCount 1].
-	 
