@@ -1,40 +1,40 @@
 # from https://www.antvaset.com/c/21h3h62rqj
 # by https://www.linkedin.com/in/antvaset/
 #
-@base <http://example.org/> .
+#@base <http://example.org/> .
+@prefix : <http://example.org/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix wd: <http://www.wikidata.org/entity/> .
 
-
 # Alice, Bob, and Carol are people
-<alice> a foaf:Person .
-<alice> foaf:name "Alice" .
-<bob> a foaf:Person .
-<bob> foaf:name "Bob" .
-<carol> a foaf:Person .
-<carol> foaf:name "Carol" .
+:alice a foaf:Person .
+:alice foaf:name "Alice" .
+:bob a foaf:Person .
+:bob foaf:name "Bob" .
+:carol a foaf:Person .
+:carol foaf:name "Carol" .
 
 # Alice knows Bob and Carol
-<alice> foaf:knows <bob> .
-<bob> foaf:knows <alice> .
-<alice> foaf:knows <carol> .
-<carol> foaf:knows <alice> .
+:alice foaf:knows :bob .
+:bob foaf:knows :alice .
+:alice foaf:knows :carol .
+:carol foaf:knows :alice .
 
 
 # Alice watched two movies
-<alice> <watched> wd:Q44578 . # Titanic
-<alice> <watched> wd:Q488655 . # Groundhog Day
+:alice :watched wd:Q44578 . # Titanic
+:alice :watched wd:Q488655 . # Groundhog Day
 
 
 # Bob watched three movies
-<bob> <watched> wd:Q162255 . # The Terminator
-<bob> <watched> wd:Q83495 . # The Matrix
-<bob> <watched> wd:Q91540 . # Back to the Future
+:bob :watched wd:Q162255 . # The Terminator
+:bob :watched wd:Q83495 . # The Matrix
+:bob :watched wd:Q91540 . # Back to the Future
 
 
 # Carol watched one movie
-<carol> <watched> wd:Q36479 . # The Lion King
+:carol :watched wd:Q36479 . # The Lion King
 
 # movies
 wd:Q36479 rdf:type wd:Movie; wd:title "The Lion King" .
