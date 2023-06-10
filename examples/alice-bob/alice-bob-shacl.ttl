@@ -10,10 +10,15 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix dash: <http://datashapes.org/dash#> .
 
+@prefix vrdf: <http://vrdf.none/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix wd: <http://www.wikidata.org/entity/> .
 
 foaf:Person rdf:type rdfs:Class; rdf:type sh:NodeShape;
+	    vrdf:comment """
+	    this is the Person class
+	    123 another line
+	    """;
 	    sh:property [sh:path foaf:name; sh:datatype xsd:string; sh:minCount 1; sh:maxCount 1];
 	    sh:property [sh:path foaf:knows; sh:class foaf:Person];
 	    sh:property [sh:path :watched; sh:class wd:Movie ]; # sh:or ( [sh:class wd:Movie ] [sh:nodeKind sh:IRI ] ) ];

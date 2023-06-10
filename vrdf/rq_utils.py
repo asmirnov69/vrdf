@@ -1,11 +1,9 @@
+import ipdb
 import pandas as pd
 
 def rq_rows(g, rq, init_bindings = None):
-    rq_res = g.query(rq, initBindings=init_bindings)
-    cols = [k for k in rq_res.bindings[0].keys()]
-    rows = [list(v.values()) for v in rq_res.bindings]
-    return cols, rows
-
+    df = rq_df(g, rq, init_bindings = init_bindings)
+    return list(df.columns), [list(x[1]) for x in df.iterrows()]
 
 def rq_df(g, rq, init_bindings = None):
     rq_res = g.query(rq, initBindings=init_bindings)
