@@ -71,13 +71,11 @@ def dump_shacl_diagram(g, shacl_classes_d, subclass_edges):
     print(f"}}", file = out_fd)
         
 if __name__ == "__main__":
-    #g = vrdf.load_rdf_graph(["./alice-bob.ttl", "./alice-bob.shacl.ttl"])
-    #g = vrdf.load_rdf_graph("./alice-bob.shacl.ttl")
-    g = vrdf.load_rdf_graph("./secmaster.shacl.ttl")
+    input_fns = sys.argv[1:]
+    g = vrdf.load_rdf_graph(input_fns)
 
     rq = "select ?c_uri ?c_doc { ?c_uri rdf:type rdfs:Class. optional {?c_uri vrdf:comment ?c_doc} }"
     res = vrdf.rq_df(g, rq)
-    #print("res:", res)
 
     shacl_classes = {}
     for r in res.itertuples():
