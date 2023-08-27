@@ -10,4 +10,5 @@ setup(
         "rdflib",
         "graphviz",
     ],
+    scripts = ["utils/shacl2dot"]
 )

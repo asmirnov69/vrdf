@@ -1,4 +1,6 @@
-import ipdb
+#!/usr/bin/env python
+#
+#import ipdb
 import vrdf
 import sys
 from collections import namedtuple
