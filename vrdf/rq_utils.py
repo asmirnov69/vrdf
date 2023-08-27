@@ -1,7 +1,6 @@
-import ipdb, rdflib
+import rdflib
 import pandas as pd
 import re
-from collections import namedtuple
 
 def is_curie(string):
     pattern = r'^[a-zA-Z_][a-zA-Z0-9_-]*:[a-zA-Z0-9_.-]+$'
@@ -19,41 +18,6 @@ def fix_init_bindings(g, init_bindings):
         else:
             ret[k] = v
     return ret
-
-def rq_value(g, rq, init_bindings = None, default = None):
-    rq_res = g.query(rq, initBindings = fix_init_bindings(g, init_bindings))
-    if len(rq_res) == 0 or (len(rq_res) == 1 and rq_res.bindings[0] == {}):
-        raise Exception(f"rq_tuple: nothing returned, rq was '{rq}'")
-    if len(rq_res) > 1:
-        raise Exception(f"rq_tuple: {len(rq_res)} rows returned, rq was {rq}")
-    if len(rq_res.vars) != 1:
-        raise Exception(f"rq_value: must be only one value")
-
-    return [x[0] for x in rq_res][0]
-
-def rq_values(g, rq, init_bindings = None):
-    rq_res = g.query(rq, initBindings = fix_init_bindings(g, init_bindings))
-    if len(rq_res.vars) != 1:
-        raise Exception(f"rq_value: must be only one value")
-
-    return [x[0] for x in rq_res]
-
-
-def rq_ntuple(g, rq, init_bindings = None):
-    rq_res = g.query(rq, initBindings = fix_init_bindings(g, init_bindings))
-    if len(rq_res) == 0:
-        raise Exception(f"rq_tuple: nothing returned, rq was {rq}")
-    if len(rq_res) > 1:
-        raise Exception(f"rq_tuple: {len(rq_res)} rows returned, rq was {rq}")
-    ret_nt = namedtuple('NT', [x[0:] for x in rq_res.vars])
-
-    raise Exception("not tested") # NB: finish and test
-    return ret_nt([x[0] for x in rq_res][0])
-
-def rq_ntuples(g, rq, init_bindings = None):
-    rq_res = g.query(rq, initBindings = fix_init_bindings(g, init_bindings))
-    ret_nt = namedtuple('NT', [x[0:] for x in rq_res.vars])
-    return [ret_nt(*x) for x in rq_res]
 
 def rq_df(g, rq, init_bindings = None):
     #ipdb.set_trace()

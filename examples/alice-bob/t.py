@@ -2,7 +2,6 @@ import ipdb
 import vrdf
 import sys
 from collections import namedtuple
-import inspect
 
 def get_class_details(g, c_uri, c_doc):
     rq = """
@@ -70,44 +69,6 @@ def dump_shacl_diagram(g, shacl_classes_d, subclass_edges):
         print(f'    {uri_to_dot_id(r.subclass_uri)} -> {uri_to_dot_id(r.class_uri)} [label = "subclass-of", fontsize=8, fontcolor=blue, fontname="Arial"]', file = out_fd)        
     
     print(f"}}", file = out_fd)
-
-def dump_py_defs(g, shacl_classes_d):
-    out_fd = sys.stdout
-    rq = "select ?c ?c_doc { ?c rdf:type rdfs:Class. optional {?c vrdf:comment ?c_doc} }"
-    _, res = vrdf.rq_rows(g, rq)
-
-    for v in shacl_classes_d.values():
-        c_uri = v.c_uri
-        c_doc = v.c_doc
-        c_dets = v.c_members
-        
-        print(f"@dataclass\nclass {c_uri.n3(g.namespace_manager)}:", file = out_fd)
-        for i, r in c_dets.iterrows():
-            member_name = r[0].n3(g.namespace_manager)
-            member_type = r[1].n3(g.namespace_manager)
-            print(f"\t{member_name}: {member_type}", file = out_fd)
-        print(f"", file = out_fd)
-        print("\tdef load(self, o_uri):", file = out_fd)
-        rq = """
-        select ?m1 ?m2 {{ ?o_uri rdf:type ?c_uri; {member_name} ?m1 }}
-        """
-
-def create_py_defs(g, shacl_classes_d):
-    rq = "select ?c ?c_doc { ?c rdf:type rdfs:Class. optional {?c vrdf:comment ?c_doc} }"
-    res = vrdf.rq_df(g, rq)
-
-    ret_new_class_defs = []
-    for v in shacl_classes_d.values():
-        c_uri = v.c_uri
-        c_doc = v.c_doc
-        c_dets = v.c_members
-
-        new_class_def = type(c_uri.n3(), (object,), {
-            # data members
-        })
-        ret_new_class_defs.append(new_class_def)
-
-    return ret_new_class_defs        
         
 if __name__ == "__main__":
     #g = vrdf.load_rdf_graph(["./alice-bob.ttl", "./alice-bob.shacl.ttl"])
@@ -128,20 +89,3 @@ if __name__ == "__main__":
     #print("subclass_edges:", res)
     
     dump_shacl_diagram(g, shacl_classes, subclass_edges)
-
-    if 0:
-        #dump_py_defs(g, shacl_classes)
-        class_defs = create_py_defs(g, shacl_classes)
-
-        for MyClass in class_defs:
-            attributes = MyClass.__dict__
-            bases = ', '.join(base.__name__ for base in MyClass.__bases__)
-
-            # Generate the class definition
-            definition = f"class {MyClass.__name__}({bases}):\n"
-            for name, value in attributes.items():
-                definition += f"    {name} = {repr(value)}\n"
-
-            # Print the generated class definition
-            print(definition)
-        
