@@ -1,0 +1,65 @@
+from __future__ import annotations
+#import alice_bob_shacl
+
+def check_type(v, type_spec):
+    if not isinstance(v, type_spec):
+        raise Exception("check_type failed")
+
+class Person:
+    name: str
+    watched: Movie # shacl_or(Movie, shacl_IRI)
+    knows: Person
+    age: int
+
+    def __init__(self):
+        self.__dict__['mod_members'] = set()
+
+    def print_mod_members(self):
+        mod_members = self.__getattribute__('mod_members')
+        print("mod members:", mod_members)      
+        
+    def __setattr__(self, m, v):
+        print("__setattr__", m, v)
+        mod_members = getattr(self, 'mod_members')
+        mod_members.add(m)
+
+        if m == 'name':
+            check_type(v, str)
+        if m == 'age':
+            check_type(v, int)
+        if m == 'knows':
+            check_type(v, Person)
+        if m == 'watched':
+            check_type(v, Movie)
+            
+        super().__setattr__(m, v)
+
+    def __getattr__(self, m):
+        print("__getattr__", m)
+        return self.__getattribute__(m)
+
+class Movie:
+    title: str
+
+
+    
+if __name__ == "__main__":
+    load_known_classes(g)
+
+    show_class_def(':Person')
+    verify_class(Person)
+    
+    io_p = Person()
+    io_p.name = 'Alice'
+    io_p.age = 15
+    print(io_p.__dict__)
+    print(io_p.name, io_p.age)
+    io_p.print_mod_members()
+
+    save_to_gdb(g, io_p)
+
+    for class_def in get_known_classes():
+        class_def.show_source()
+        
+    uri = ":alice"
+    p = load_object(g, uri)

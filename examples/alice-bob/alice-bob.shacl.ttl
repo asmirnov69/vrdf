@@ -1,6 +1,6 @@
 # SHACL defitions for Alice&Bob example
 #
-# sh ~/shacl-1.4.2/bin/shaclvalidate.sh -shapesfile ./alice-bob-shacl.ttl -datafile ./alice-bob.ttl
+# sh ~/shacl-1.4.2/bin/shaclvalidate.sh -shapesfile ./alice-bob.shacl.ttl -datafile ./alice-bob.ttl
 #
 #@base <http://example.org/> .
 @prefix : <http://example.org/> .
